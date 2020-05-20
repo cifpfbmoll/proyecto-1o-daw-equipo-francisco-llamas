@@ -1,22 +1,74 @@
 package java_proyecto;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- *
- * @author Usuario
- */
 public class main_Window extends javax.swing.JFrame {
 
     /**
      * Creates new form main_Window
      */
+    String imgRuta = null;
+
     public main_Window() {
         initComponents();
+        obtenerConexion();
+    }
+
+    public Connection obtenerConexion() {
+        Connection con = null;
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/coches_db", "root", "");
+            JOptionPane.showMessageDialog(null, "Conectado");
+            return con;
+        } catch (SQLException ex) {
+            Logger.getLogger(main_Window.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "No Conectado");
+            return null;
+        }
+    }
+
+    //metodo para revisar inputs
+    public boolean revisarInputs() {
+        if(txt_matricula.getText() == null || txt_marca.getText() == null
+                || txt_modelo.getText() == null || txt_precio.getText() == null
+                || txt_fecha.getText() == null || txt_color.getText() ==null){
+            return false;
+        }else{
+            try{
+                Float.parseFloat(txt_precio.getText());
+                return true;
+            }catch(Exception ex){
+                return false;
+            }
+        }
+    }
+
+    //metodo para reescalar las imagenes
+    public ImageIcon RedimensionarImagen(String imgRuta, byte[] pic) {
+        ImageIcon miImagen = null;
+        if (imgRuta != null) {
+            miImagen = new ImageIcon(imgRuta);
+        } else {
+            miImagen = new ImageIcon(pic);
+        }
+        Image img = miImagen.getImage();
+        Image img2 = img.getScaledInstance(lbl_imagen.getWidth(), lbl_imagen.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon imagen = new ImageIcon(img2);
+        return imagen;
     }
 
     /**
@@ -36,18 +88,18 @@ public class main_Window extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
+        txt_matricula = new javax.swing.JTextField();
+        txt_fecha = new javax.swing.JTextField();
+        txt_marca = new javax.swing.JTextField();
+        txt_precio = new javax.swing.JTextField();
+        txt_color = new javax.swing.JTextField();
+        lbl_imagen = new javax.swing.JTextField();
+        txt_modelo = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        Btn_Escoger_Imagen = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btn_añadir = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
@@ -66,12 +118,10 @@ public class main_Window extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Introduzca la matricula:");
-        jLabel2.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(0, 0, 255)));
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Introduzca la marca del vehículo:");
-        jLabel3.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(0, 0, 255)));
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -89,60 +139,60 @@ public class main_Window extends javax.swing.JFrame {
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Introduzca el modelo del vehículo:");
 
-        jTextField1.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jTextField1.setPreferredSize(new java.awt.Dimension(59, 45));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txt_matricula.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txt_matricula.setPreferredSize(new java.awt.Dimension(59, 45));
+        txt_matricula.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txt_matriculaActionPerformed(evt);
             }
         });
 
-        jTextField2.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jTextField2.setPreferredSize(new java.awt.Dimension(59, 45));
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        txt_fecha.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txt_fecha.setPreferredSize(new java.awt.Dimension(59, 45));
+        txt_fecha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txt_fechaActionPerformed(evt);
             }
         });
 
-        jTextField3.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jTextField3.setPreferredSize(new java.awt.Dimension(59, 45));
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        txt_marca.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txt_marca.setPreferredSize(new java.awt.Dimension(59, 45));
+        txt_marca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                txt_marcaActionPerformed(evt);
             }
         });
 
-        jTextField4.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jTextField4.setPreferredSize(new java.awt.Dimension(59, 45));
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        txt_precio.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txt_precio.setPreferredSize(new java.awt.Dimension(59, 45));
+        txt_precio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                txt_precioActionPerformed(evt);
             }
         });
 
-        jTextField5.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jTextField5.setPreferredSize(new java.awt.Dimension(59, 45));
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+        txt_color.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txt_color.setPreferredSize(new java.awt.Dimension(59, 45));
+        txt_color.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
+                txt_colorActionPerformed(evt);
             }
         });
 
-        jTextField6.setBackground(new java.awt.Color(255, 255, 204));
-        jTextField6.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jTextField6.setPreferredSize(new java.awt.Dimension(59, 45));
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+        lbl_imagen.setBackground(new java.awt.Color(255, 255, 204));
+        lbl_imagen.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lbl_imagen.setPreferredSize(new java.awt.Dimension(59, 45));
+        lbl_imagen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
+                lbl_imagenActionPerformed(evt);
             }
         });
 
-        jTextField7.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        jTextField7.setPreferredSize(new java.awt.Dimension(59, 45));
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        txt_modelo.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txt_modelo.setPreferredSize(new java.awt.Dimension(59, 45));
+        txt_modelo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                txt_modeloActionPerformed(evt);
             }
         });
 
@@ -151,16 +201,16 @@ public class main_Window extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Matricula", "Marca", "Modelo", "Precio", "Fecha", "Color", "Title 7"
+                "Matricula", "Marca", "Modelo", "Precio", "Fecha", "Color"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton1.setText("Escoger imagen");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        Btn_Escoger_Imagen.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        Btn_Escoger_Imagen.setText("Escoger imagen");
+        Btn_Escoger_Imagen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                Btn_Escoger_ImagenActionPerformed(evt);
             }
         });
 
@@ -170,11 +220,16 @@ public class main_Window extends javax.swing.JFrame {
         jButton2.setText("Actualizar Vehiculo");
         jButton2.setIconTextGap(10);
 
-        jButton3.setBackground(new java.awt.Color(153, 153, 153));
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes.icons/add.png"))); // NOI18N
-        jButton3.setText("Añadir Vehiculo");
-        jButton3.setIconTextGap(10);
+        btn_añadir.setBackground(new java.awt.Color(153, 153, 153));
+        btn_añadir.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        btn_añadir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes.icons/add.png"))); // NOI18N
+        btn_añadir.setText("Añadir Vehiculo");
+        btn_añadir.setIconTextGap(10);
+        btn_añadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_añadirActionPerformed(evt);
+            }
+        });
 
         jButton4.setBackground(new java.awt.Color(153, 153, 153));
         jButton4.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
@@ -234,22 +289,21 @@ public class main_Window extends javax.swing.JFrame {
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(Btn_Escoger_Imagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_imagen, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                            .addComponent(txt_matricula, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_precio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txt_color, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                            .addComponent(txt_fecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txt_modelo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txt_marca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_añadir, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -272,43 +326,43 @@ public class main_Window extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(78, 78, 78)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txt_matricula, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_marca, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(19, 19, 19)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_modelo, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(txt_precio, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_fecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lbl_imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(Btn_Escoger_Imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(49, 49, 49)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_añadir, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -333,37 +387,52 @@ public class main_Window extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private void txt_matriculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_matriculaActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_txt_matriculaActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void txt_fechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_fechaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_txt_fechaActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void txt_marcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_marcaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_txt_marcaActionPerformed
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void txt_precioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_precioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+    }//GEN-LAST:event_txt_precioActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void txt_colorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_colorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+    }//GEN-LAST:event_txt_colorActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
+    private void lbl_imagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lbl_imagenActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+    }//GEN-LAST:event_lbl_imagenActionPerformed
+
+    private void txt_modeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_modeloActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_txt_modeloActionPerformed
+
+    private void Btn_Escoger_ImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_Escoger_ImagenActionPerformed
+        //INCOMPLETO. REVISAR. NO PUEDO AÑADIR IMAGENES.
+        JFileChooser archivo = new JFileChooser();
+        archivo.setCurrentDirectory(new File(System.getProperty("user.home")));
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("jpg", "png");
+        archivo.addChoosableFileFilter(filter);
+        int result = archivo.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = archivo.getSelectedFile();
+            String path = selectedFile.getAbsolutePath();
+            // No entiendo porque no reconoce el metodo setIcon si esta incluido
+            //lbl_imagen.setIcon(RedimensionarImagen(path, null));
+            imgRuta = path;
+        } else {
+            System.out.println("No has escogido ningun archivo.");
+        }
+    }//GEN-LAST:event_Btn_Escoger_ImagenActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
@@ -373,7 +442,42 @@ public class main_Window extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    
+    private void btn_añadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_añadirActionPerformed
+        if(revisarInputs() && imgRuta != null){
+            try {
+                Connection con = obtenerConexion();
+                PreparedStatement ps = con.prepareStatement("INSERT INTO coches(matricula,marca,modelo,precio,fecha_añadido,color,imagen)"
+                        + "values(?,?,?,?,?,?,?) ");
+                ps.setString(1, txt_matricula.getText());
+                ps.setString(2, txt_marca.getText());
+                ps.setString(3, txt_modelo.getText());
+                ps.setString(4, txt_precio.getText());
+                ps.setString(5, txt_fecha.getText());
+                ps.setString(6, txt_color.getText());
+                
+                try {
+                    InputStream img = new FileInputStream(new File(imgRuta));
+                    ps.setBlob(7, img);
+                    ps.executeUpdate();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(main_Window.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(main_Window.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Uno o mas campos están vacios. Debe rellenar todos los campos.");
+        }
+        //pruebas
+         System.out.println("matricula: "+txt_matricula.getText());
+         System.out.println("marca: "+txt_marca.getText());
+         System.out.println("modelo: "+txt_modelo.getText());
+         System.out.println("precio: "+txt_precio.getText());
+         System.out.println("fecha: "+txt_fecha.getText());
+         System.out.println("color: "+txt_color.getText());
+         //todo aparece en los prints, lo que sigue fallando la imagen. No se añaden a la bbdd porque ese campo está incompleto. 
+    }//GEN-LAST:event_btn_añadirActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -400,6 +504,7 @@ public class main_Window extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new main_Window().setVisible(true);
             }
@@ -407,9 +512,9 @@ public class main_Window extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton Btn_Escoger_Imagen;
+    private javax.swing.JButton btn_añadir;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton7;
@@ -425,12 +530,13 @@ public class main_Window extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField lbl_imagen;
+    private javax.swing.JTextField txt_color;
+    private javax.swing.JTextField txt_fecha;
+    private javax.swing.JTextField txt_marca;
+    private javax.swing.JTextField txt_matricula;
+    private javax.swing.JTextField txt_modelo;
+    private javax.swing.JTextField txt_precio;
     // End of variables declaration//GEN-END:variables
+
 }
