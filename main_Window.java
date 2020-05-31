@@ -23,6 +23,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.lang.Object;
 
+/**
+ *
+ * @author Usuario
+ */
 public class main_Window extends javax.swing.JFrame {
 
     /**
@@ -31,12 +35,19 @@ public class main_Window extends javax.swing.JFrame {
     String imgRuta = null;
     int pos = 0;
 
+    /**
+     *
+     */
     public main_Window() {
         initComponents();
         obtenerConexion();
         mostrarDatosTabla();
     }
 
+    /**
+     *
+     * @return
+     */
     public Connection obtenerConexion() {
         Connection con = null;
         try {
@@ -59,13 +70,20 @@ public class main_Window extends javax.swing.JFrame {
                 Float.parseFloat(txt_precio.getText());
                 //el precio es un float, y por ello la reconversión.
                 return true;
-            } catch (Exception ex) {
+            } catch (NumberFormatException ex) {
                 return false;
             }
         }
     }
 
-    //metodo para reescalar las imagenes y que no se deformen
+    //metodo para reescalar las imagenes y que quepan en el lbl de la imagen
+
+    /**
+     *
+     * @param imgRuta
+     * @param pic
+     * @return
+     */
     public ImageIcon RedimensionarImagen(String imgRuta, byte[] pic) {
         ImageIcon miImagen = null;
         if (imgRuta != null) {
@@ -81,6 +99,11 @@ public class main_Window extends javax.swing.JFrame {
 
     //metodos para mostrar los datos en la tabla
     //1 - Llenar una Arraylist con los datos.
+
+    /**
+     *
+     * @return
+     */
     public ArrayList<coche> getData() {
         ArrayList<coche> listaCoches = new ArrayList<coche>();
         Connection con = obtenerConexion();
@@ -106,6 +129,10 @@ public class main_Window extends javax.swing.JFrame {
     }
     
     //2 Poner los datos en la tabla
+
+    /**
+     *
+     */
     public void mostrarDatosTabla(){
         ArrayList<coche> lista = getData();
         DefaultTableModel model = (DefaultTableModel)jTable_coches.getModel();
@@ -123,6 +150,11 @@ public class main_Window extends javax.swing.JFrame {
         
     }
     
+    /**
+     *
+     * @param indice
+     */
+    //muestra los datos en las entradas de informacion
     public void mostrarObjeto(int indice){
         txt_matricula.setText(getData().get(indice).getMatricula());
         txt_marca.setText(getData().get(indice).getMarca());
@@ -134,6 +166,9 @@ public class main_Window extends javax.swing.JFrame {
         
     }
     
+    /**
+     *
+     */
     public void limpiarCampos(){
         txt_matricula.setText(null);
         txt_marca.setText(null);
@@ -169,9 +204,9 @@ public class main_Window extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable_coches = new javax.swing.JTable();
         Btn_Escoger_Imagen = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        update_button = new javax.swing.JButton();
         btn_añadir = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        delete_button = new javax.swing.JButton();
         btn_ultimo = new javax.swing.JButton();
         btn_primer = new javax.swing.JButton();
         btn_next = new javax.swing.JButton();
@@ -284,14 +319,14 @@ public class main_Window extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(153, 153, 153));
-        jButton2.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes.icons/update.png"))); // NOI18N
-        jButton2.setText("Actualizar Vehiculo");
-        jButton2.setIconTextGap(10);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        update_button.setBackground(new java.awt.Color(153, 153, 153));
+        update_button.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        update_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes.icons/update.png"))); // NOI18N
+        update_button.setText("Actualizar Vehiculo");
+        update_button.setIconTextGap(10);
+        update_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                update_buttonActionPerformed(evt);
             }
         });
 
@@ -306,14 +341,14 @@ public class main_Window extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(153, 153, 153));
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes.icons/delete.png"))); // NOI18N
-        jButton4.setText("Borrar Vehiculo");
-        jButton4.setIconTextGap(10);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        delete_button.setBackground(new java.awt.Color(153, 153, 153));
+        delete_button.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        delete_button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes.icons/delete.png"))); // NOI18N
+        delete_button.setText("Borrar Vehiculo");
+        delete_button.setIconTextGap(10);
+        delete_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                delete_buttonActionPerformed(evt);
             }
         });
 
@@ -422,9 +457,9 @@ public class main_Window extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btn_añadir, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(173, 173, 173)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(416, Short.MAX_VALUE))
@@ -474,8 +509,8 @@ public class main_Window extends javax.swing.JFrame {
                 .addGap(64, 64, 64)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_añadir, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -546,7 +581,7 @@ public class main_Window extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_Btn_Escoger_ImagenActionPerformed
     //metodo para hacer deletes en la BBDD
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void delete_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_buttonActionPerformed
         if (!txt_matricula.getText().equals("")) {
             try {
                 Connection con = obtenerConexion();
@@ -563,7 +598,7 @@ public class main_Window extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "El vehiculo no se ha borrado, no hay ningúna ID como la que ha escrito.");
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_delete_buttonActionPerformed
 
     private void btn_ultimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ultimoActionPerformed
         pos = getData().size()-1;
@@ -611,13 +646,14 @@ public class main_Window extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_añadirActionPerformed
 
     //metodo para hacer updates en la BBDD
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    //checkea que los inputs no esten vacios.
+    //Si la ruta de la imagen se ha rellenado, se hace update de la imagen
+    //De lo contrario, no se actualiza la imagen
+    private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
         if (revisarInputs() && txt_matricula.getText() != null) {
             String updateQuery = null;
             PreparedStatement ps = null;
             Connection con = obtenerConexion();
-
-            //hacer update sin imagen
             if (imgRuta == null) {
                 try {
                     updateQuery = "UPDATE coches SET marca = ?, modelo = ?, precio = ?, fecha_añadido = ?, color = ?, WHERE matricula = ?";
@@ -630,11 +666,10 @@ public class main_Window extends javax.swing.JFrame {
                     ps.setString(6, txt_matricula.getText());
                     ps.executeUpdate();
                     mostrarDatosTabla();
-                    JOptionPane.showMessageDialog(null, "Producto Actualizado");
+                    JOptionPane.showMessageDialog(null, "Vehiculo Actualizado");
                 } catch (SQLException ex) {
                     Logger.getLogger(main_Window.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //hacer update con imagen
             } else {
                 try {
                     InputStream img = new FileInputStream(new File(imgRuta));
@@ -649,7 +684,7 @@ public class main_Window extends javax.swing.JFrame {
                     ps.setString(7, txt_matricula.getText());
                     ps.executeUpdate();
                     mostrarDatosTabla();
-                    JOptionPane.showMessageDialog(null, "Producto Actualizado");
+                    JOptionPane.showMessageDialog(null, "Vehiculo Actualizado");
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
@@ -657,7 +692,7 @@ public class main_Window extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Uno o mas campos están vacíos o son erróneos");
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_update_buttonActionPerformed
 
     private void jTable_cochesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable_cochesMouseClicked
         int indice = jTable_coches.getSelectedRow();
@@ -689,6 +724,10 @@ public class main_Window extends javax.swing.JFrame {
         limpiarCampos();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -730,10 +769,9 @@ public class main_Window extends javax.swing.JFrame {
     private javax.swing.JButton btn_primer;
     private javax.swing.JButton btn_ultimo;
     private javax.swing.JLabel color_label;
+    private javax.swing.JButton delete_button;
     private javax.swing.JLabel fecha_label;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
@@ -750,6 +788,7 @@ public class main_Window extends javax.swing.JFrame {
     private javax.swing.JTextField txt_matricula;
     private javax.swing.JTextField txt_modelo;
     private javax.swing.JTextField txt_precio;
+    private javax.swing.JButton update_button;
     // End of variables declaration//GEN-END:variables
 
 }
